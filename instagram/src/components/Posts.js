@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import User from './User';
-import InstaService from '../services/instaservices';
+import InstaService from '../services/instaservice';
+import ErrorMessage from './ErrorMessage';
 
 export default class Posts extends Component {
   InstaService = new InstaService();
@@ -34,22 +35,21 @@ export default class Posts extends Component {
 
   renderItems(arr) {
     return arr.map(item => {
-      const {name, altname, photo, scr, alt, descr, id} = item;
+      const {name, altname, photo, src, alt, descr, id} = item;
 
       return (
-        <div className="post">
+        <div key={id} className="post">
           <User
-            src="https://peopledotcom.files.wordpress.com/2018/11/prince-harry.jpg?crop=0px%2C0px%2C1200px%2C630px&resize=1200%2C630"
-            alt="prince" 
-            name="Harry"
-            min
-            />
-          <img src={this.props.src} alt={this.props.alt}></img>
+            src={photo}
+            alt={altname} 
+            name={name}
+            min/>
+          <img src={src} alt={alt}></img>
           <div className="post__name">
-            some account
+            {name}
           </div>
           <div className="post__descr">
-            hkg ahsfh asdfukasdfklhasdkjfahlsdf sdasds j dsdhf sffus sfa sdffisd d
+            {descr}
           </div>
         </div>
       )
@@ -57,10 +57,16 @@ export default class Posts extends Component {
   }
 
   render() {
+    const {error, posts} = this.state;
+    if (error) {
+      return <ErrorMessage/>
+    }
+
+    const items = this.renderItems(posts);
+
     return(
       <div className="left">
-        <Post alt="Nature" src="http://images.france.fr/zeaejvyq9bhj/4VGVbWT4kwsIyqaIuyiYs2/69b40a00fddb2b2c26ebd472fa6e4186/nature_dordogne.jpg?w=1200&h=630&q=70&fl=progressive&fit=fill" />
-        <Post alt="Nature" src="https://www.visitportugal.com/sites/www.visitportugal.com/files/mediateca/23_660x371.jpg" />
+        {items}
       </div>
     )
   }
