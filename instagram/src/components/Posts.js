@@ -1,7 +1,61 @@
 import React, {Component} from 'react';
-import Post from './Post'
+import User from './User';
+import InstaService from '../services/instaservices';
 
 export default class Posts extends Component {
+  InstaService = new InstaService();
+  state = {
+    posts: [],
+    error: false
+  }
+
+  componentDidMount() {
+    this.updatePosts()
+  }
+
+  updatePosts() {
+    this.InstaService.getAllPosts()
+    .then(this.onPostsLoaded)
+    .catch(this.onError);
+  }
+
+  onPostsLoaded = (posts) => {
+    this.setState({
+      posts,
+      error: false
+    })
+  }
+
+  onError = (error) => {
+    this.setState({
+      error: true
+    })
+  }
+
+  renderItems(arr) {
+    return arr.map(item => {
+      const {name, altname, photo, scr, alt, descr, id} = item;
+
+      return (
+        <div className="post">
+          <User
+            src="https://peopledotcom.files.wordpress.com/2018/11/prince-harry.jpg?crop=0px%2C0px%2C1200px%2C630px&resize=1200%2C630"
+            alt="prince" 
+            name="Harry"
+            min
+            />
+          <img src={this.props.src} alt={this.props.alt}></img>
+          <div className="post__name">
+            some account
+          </div>
+          <div className="post__descr">
+            hkg ahsfh asdfukasdfklhasdkjfahlsdf sdasds j dsdhf sffus sfa sdffisd d
+          </div>
+        </div>
+      )
+    })
+  }
+
   render() {
     return(
       <div className="left">
